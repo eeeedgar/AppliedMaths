@@ -3,22 +3,26 @@
 #include "dichotomy.h"
 #include "fibonacci.h"
 #include "goldenRatio.h"
+#include "parabolic.h"
 
 using namespace std;
 
 int main()
 {
-  double a = 0;
-  double b = 10;
+  double a = -4;
+  double b = 4;
   double eps = 0.01;
   auto limits = Limits{a, b};
 
   double xDichotomy = dichotomyGetMinimum(limits, eps);
-  cout << xDichotomy << "\t" << f(xDichotomy) << endl;
+  cout << "dichotomy:\t" << xDichotomy << "\t" << f(xDichotomy) << endl;
 
   double xGoldenRatio = goldenRatioGetMinimum(limits, eps);
-  cout << xGoldenRatio << "\t" << f(xGoldenRatio) << endl;
+  cout << "golden ratio:\t" << xGoldenRatio << "\t" << f(xGoldenRatio) << endl;
 
   double xFibonacci = fibonacciGetMinimum(limits, eps);
-  cout << xFibonacci << "\t" << f(xFibonacci) << endl;
+  cout << "fibonacci:\t" << xFibonacci << "\t" << f(xFibonacci) << endl;
+
+  double xParabolic = parabolicGetMinimum(limits, eps);
+  cout << "parabolic:\t" << xParabolic << "\t" << f(xParabolic) << endl;
 }
