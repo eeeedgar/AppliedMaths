@@ -4,6 +4,7 @@
 #include "fibonacci.h"
 #include "goldenRatio.h"
 #include "parabolic.h"
+#include "brent.h"
 
 using namespace std;
 
@@ -20,9 +21,12 @@ void test(double a, double b, double eps, string sourcedir, int num) {
 
     double xParabolic = parabolicGetMinimum(limits, eps, sourcedir + "parabolic" + to_string(num) + ".txt");
     cout << "parabolic:\t" << xParabolic << "\t" << f(xParabolic) << endl;
+
+	double xBrent = brentGetMinimum(limits, eps);
+	cout << "brent's:\t" << xBrent << "\t" << f(xBrent) << endl;
 }
 
 int main() {
-    test(-5, 1, 1e-9, "/Users/vekajp/Desktop/примат/lab1/res/", 1);
-    test(-5, 10, 1e-5, "/Users/vekajp/Desktop/примат/lab1/res/", 2);
+    test(-5, 1, 1e-9, "D:/appliedMaths/", 1);
+    test(-5, 10, 1e-5, "D:/appliedMaths/", 2);
 }
