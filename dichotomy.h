@@ -9,7 +9,7 @@
 
 Limits dichotomyGetNewLimits(Limits, double);
 
-double dichotomyGetMinimum(Limits, double);
+double dichotomyGetMinimum(Limits, double, std::string);
 
 bool isEnough(Limits);
 

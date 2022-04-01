@@ -8,17 +8,16 @@
 #include <vector>
 #include "general.h"
 
-struct FibonacciLimits
-{
-  double a, b, x1, x2, y1, y2;
+struct FibonacciLimits {
+    double a, b, x1, x2, y1, y2;
 };
 
-int getFibonacciSequenceElementNumberByValue(int, std::vector<int>&);
+int getFibonacciSequenceElementNumberByValue(int, std::vector<int> &);
 
 FibonacciLimits fibonacciGetNewLimits(FibonacciLimits);
 
-int fibonacciGetIterationNumberAndFillFibonacciSequence(Limits, double, const std::vector<int>&);
+int fibonacciGetIterationNumberAndFillFibonacciSequence(Limits, double, const std::vector<int> &);
 
-double fibonacciGetMinimum(Limits, double);
+double fibonacciGetMinimum(Limits, double, std::string);
 
 #endif //APPLIEDMATHS_LAB1__FIBONACCI_H_
