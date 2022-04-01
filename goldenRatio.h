@@ -1,7 +1,3 @@
-//
-// Created by edgar on 3/31/2022.
-//
-
 #ifndef APPLIEDMATHS_LAB1__GOLDENRATIO_H_
 #define APPLIEDMATHS_LAB1__GOLDENRATIO_H_
 

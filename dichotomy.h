@@ -1,7 +1,3 @@
-//
-// Created by edgar on 3/31/2022.
-//
-
 #ifndef DICHOTOMYMETHOD__DICHOTOMY_H_
 #define DICHOTOMYMETHOD__DICHOTOMY_H_
 

@@ -1,7 +1,3 @@
-//
-// Created by edgar on 3/31/2022.
-//
-
 #ifndef APPLIEDMATHS_LAB1__PARABOLIC_H_
 #define APPLIEDMATHS_LAB1__PARABOLIC_H_
 
