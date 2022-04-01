@@ -22,7 +22,7 @@ void test(double a, double b, double eps, string sourcedir, int num) {
     double xParabolic = parabolicGetMinimum(limits, eps, sourcedir + "parabolic" + to_string(num) + ".txt");
     cout << "parabolic:\t" << xParabolic << "\t" << f(xParabolic) << endl;
 
-	double xBrent = brentGetMinimum(limits, eps);
+	double xBrent = brentGetMinimum(limits, eps, sourcedir + "brent" + to_string(num) + ".txt");
 	cout << "brent's:\t" << xBrent << "\t" << f(xBrent) << endl;
 }
 

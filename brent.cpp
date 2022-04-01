@@ -1,5 +1,9 @@
 #include "brent.h"
 #include <cmath>
+#include <fstream>
+
+std::ofstream foutBrent;
+int functionCallNumberBrent = 0;
 
 double r()
 {
@@ -32,12 +36,12 @@ double getParabolaMinX(
 		(p2_x - p3_x) * (p2_x - p3_x) * (p2_y - p1_y) / denominator);
 }
 
-int functionCallNumber;
-
-double brentGetMinimum(Limits limits, double eps)
+double brentGetMinimum(Limits limits, double eps, std::string file)
 {
+	foutBrent.open(file);
+	foutBrent.clear();
+
 	double microEps = 1e-12;
-	functionCallNumber = 0;
 	double aX = limits.a;
 	double aY = f(aX);
 	double cX = limits.b;
@@ -65,24 +69,24 @@ double brentGetMinimum(Limits limits, double eps)
 
 		bool parabolic = false;
 
-		double u_x = 0;
-		double u_y = 0;
+		double uX = 0;
+		double uY = 0;
 
 		if (not isEpsEqual(xX, wX, vX, microEps))
 		{
 			double parabolaMinX = getParabolaMinX(xX, xY, wX, wY, vX, vY);
-			functionCallNumber += 3;
+			functionCallNumberBrent += 3;
 
-			u_x = parabolaMinX;
-			u_y = f(parabolaMinX);
+			uX = parabolaMinX;
+			uY = f(parabolaMinX);
 
-			if (aX <= u_x <= cX and std::abs(u_x - xX) < g / 2)
+			if (aX <= uX <= cX and std::abs(uX - xX) < g / 2)
 			{
 				parabolic = true;
-				if (u_x - aX < 2 * tol or cX - u_x < 2 * tol)
+				if (uX - aX < 2 * tol or cX - uX < 2 * tol)
 				{
-					u_x = xX - sign(xX - (aX + cX) / 2) * tol;
-					u_y = f(u_x);
+					uX = xX - sign(xX - (aX + cX) / 2) * tol;
+					uY = f(uX);
 				}
 			}
 		}
@@ -92,34 +96,34 @@ double brentGetMinimum(Limits limits, double eps)
 			if (xX < (aX + cX) / 2)
 			{
 				double goldenRatio = xX + r() * (cX - xX);
-				u_x = goldenRatio;
-				u_y = f(goldenRatio);
+				uX = goldenRatio;
+				uY = f(goldenRatio);
 				e = cX - xX;
 			}
 			else
 			{
 				double goldenRatio = xX - r() * (xX - aX);
-				u_x = goldenRatio;
-				u_y = f(goldenRatio);
+				uX = goldenRatio;
+				uY = f(goldenRatio);
 				e - xX - aX;
 			}
 		}
 
-		if (std::abs(u_x - xX) < tol)
+		if (std::abs(uX - xX) < tol)
 		{
-			double minProximity = xX + sign(u_x - xX) * eps;
-			u_x = minProximity;
-			u_y = f(minProximity);
+			double minProximity = xX + sign(uX - xX) * eps;
+			uX = minProximity;
+			uY = f(minProximity);
 		}
 
-		d = std::abs(u_x - xX);
+		d = std::abs(uX - xX);
 
-		functionCallNumber++;
-		if (parabolic) functionCallNumber++;
+		functionCallNumberBrent++;
+		if (parabolic) functionCallNumberBrent++;
 
-		if (u_y <= xY)
+		if (uY <= xY)
 		{
-			if (u_x >= xX)
+			if (uX >= xX)
 			{
 				aX = xX;
 				aY = xY;
@@ -133,40 +137,43 @@ double brentGetMinimum(Limits limits, double eps)
 			vY = wY;
 			wX = xX;
 			wY = xY;
-			xX = u_x;
-			xY = u_y;
+			xX = uX;
+			xY = uY;
 		}
 		else
 		{
-			if (u_x >= xX)
+			if (uX >= xX)
 			{
-				cX = u_x;
-				cY = u_y;
+				cX = uX;
+				cY = uY;
 			}
 			else
 			{
-				aX = u_x;
-				aY = u_y;
+				aX = uX;
+				aY = uY;
 			}
 
-			if (parabolic) functionCallNumber++;
+			if (parabolic) functionCallNumberBrent++;
 
-			if (u_y <= wY or std::abs(wX - xX) < microEps)
+			if (uY <= wY or std::abs(wX - xX) < microEps)
 			{
 				vX = wX;
 				vY = wY;
 			}
 			else
 			{
-				if (parabolic) functionCallNumber++;
-				if (u_y <= vY or std::abs(vX - xX) < microEps or std::abs(vX - wX) < microEps)
+				if (parabolic) functionCallNumberBrent++;
+				if (uY <= vY or std::abs(vX - xX) < microEps or std::abs(vX - wX) < microEps)
 				{
-					vX = u_x;
-					vY = u_y;
+					vX = uX;
+					vY = uY;
 				}
 			}
 		}
-		iterationNumber++;
+
+		foutBrent << ++iterationNumber << "\t" << aX << "\t" << cX << "\t" << functionCallNumberBrent << "\n";
 	}
+
+	foutBrent.close();
 	return xX;
 }
