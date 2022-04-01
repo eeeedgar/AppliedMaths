@@ -11,12 +11,6 @@ struct ParabolicLimits {
     double x1, x2, x3, f1, f2, f3, x_;
 };
 
-struct Parabola {
-    double a0, a1, a2;
-};
-
-Parabola getParabola(ParabolicLimits);
-
 ParabolicLimits getParabolicLimitsFunctionValues(ParabolicLimits);
 
 ParabolicLimits getNewParabolicLimits(ParabolicLimits);
