@@ -1,32 +1,18 @@
-//
-// Created by edgar on 3/31/2022.
-//
-
-#include <iostream>
+#include <fstream>
 #include "parabolic.h"
 
-//Parabola getParabola(ParabolicLimits limits)
-//{
-//  double x1 = limits.x1;
-//  double x2 = limits.x2;
-//  double x3 = limits.x3;
-//
-//  double f1 = limits.f1;
-//  double f2 = limits.f2;
-//  double f3 = limits.f3;
-//
-//  double a0 = f1;
-//  double a1 = (f2 - f1) / (x2 - x1);
-//  double a2 = (f3 - f1) * (f2 - f1) / (x3 - x1) / (x2 - x1) / (x3 - x2);
-//
-//  return Parabola{a0, a1, a2};
-//}
+std::ofstream foutParabolic;
+int functionCallsNumberParabolic = 0;
+
 
 ParabolicLimits getParabolicLimitsFunctionValues(ParabolicLimits parabolicLimits)
 {
   parabolicLimits.f1 = f(parabolicLimits.x1);
+  functionCallsNumberParabolic++;
   parabolicLimits.f2 = f(parabolicLimits.x2);
+  functionCallsNumberParabolic++;
   parabolicLimits.f3 = f(parabolicLimits.x3);
+  functionCallsNumberParabolic++;
 
   return parabolicLimits;
 }
@@ -47,11 +33,13 @@ ParabolicLimits getNewParabolicLimits(ParabolicLimits parabolicLimits)
   {
 	parabolicLimits.x1 = x_;
 	parabolicLimits.f1 = f(x_);
+	functionCallsNumberParabolic++;
   }
   else
   {
 	parabolicLimits.x3 = x_;
 	parabolicLimits.f3 = f(x_);
+	functionCallsNumberParabolic++;
   }
 
   return parabolicLimits;
@@ -64,6 +52,11 @@ bool areCloseEnough(double a, double b, double eps)
 
 double parabolicGetMinimum(Limits limits, double eps)
 {
+  foutParabolic.open("D:/appliedMaths/parabolic.txt");
+  foutParabolic.clear();
+
+  int iteration = 0;
+
   double x1 = limits.a;
   double x3 = limits.b;
   double x2 = (limits.a + limits.b) / 2;
@@ -84,8 +77,10 @@ double parabolicGetMinimum(Limits limits, double eps)
 	x1 = parabolicLimits.x1;
 	x3 = parabolicLimits.x3;
 	parabolicLimits = getNewParabolicLimits(parabolicLimits);
-	std::cout << parabolicLimits.x1 << " " << parabolicLimits.x2 << " " << parabolicLimits.x3 << std::endl;
+
+	foutParabolic << ++iteration << ";\t" << limits.a << ";\t" << limits.b << ";\t" << functionCallsNumberParabolic << "\n";
   }
 
+  foutParabolic.close();
   return parabolicLimits.x2;
 }

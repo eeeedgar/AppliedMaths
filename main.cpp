@@ -4,14 +4,15 @@
 #include "fibonacci.h"
 #include "goldenRatio.h"
 #include "parabolic.h"
+#include "brent.h"
 
 using namespace std;
 
 int main()
 {
-  double a = -4;
-  double b = 4;
-  double eps = 0.01;
+  double a = -10;
+  double b = 1;
+  double eps = 1e-9;
   auto limits = Limits{a, b};
 
   double xDichotomy = dichotomyGetMinimum(limits, eps);
