@@ -1,7 +1,3 @@
-//
-// Created by edgar on 3/31/2022.
-//
-
 #include <vector>
 #include <fstream>
 #include "fibonacci.h"
@@ -55,6 +51,7 @@ double fibonacciGetMinimum(Limits limits, double eps, std::string file) {
 
     foutFibonacci.open(file);
     foutFibonacci.clear();
+	foutFibonacci << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
 
     int iteration = 0;
     std::vector<int> fibonacciSequence = std::vector<int>();
@@ -71,7 +68,7 @@ double fibonacciGetMinimum(Limits limits, double eps, std::string file) {
 
     for (int i = n; i > 1; i--) {
         fibonacciLimits = fibonacciGetNewLimits(fibonacciLimits);
-        foutFibonacci << ++iteration << ";\t" << fibonacciLimits.a << ";\t" << fibonacciLimits.b << ";\t" << functionCallsNumberFibonacci
+        foutFibonacci << ++iteration << "\t" << fibonacciLimits.a << "\t" << fibonacciLimits.b << "\t" << functionCallsNumberFibonacci
                      << "\n";
     }
 

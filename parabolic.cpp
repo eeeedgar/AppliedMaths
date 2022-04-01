@@ -48,6 +48,7 @@ bool areCloseEnough(double a, double b, double eps) {
 double parabolicGetMinimum(Limits limits, double eps, std::string file) {
     foutParabolic.open(file);
     foutParabolic.clear();
+	foutParabolic << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
 
     int iteration = 0;
 
@@ -58,20 +59,25 @@ double parabolicGetMinimum(Limits limits, double eps, std::string file) {
     auto parabolicLimits = ParabolicLimits{x1, x2, x3};
     parabolicLimits = getParabolicLimitsFunctionValues(parabolicLimits);
 
-    x1 = 1;
-    x3 = -1;
+	x1 = parabolicLimits.x1;
+	x3 = parabolicLimits.x3;
+	parabolicLimits = getNewParabolicLimits(parabolicLimits);
+
+	foutParabolic << ++iteration << "\t" << parabolicLimits.x1 << "\t" << parabolicLimits.x3 << "\t" << functionCallsNumberParabolic
+				  << "\n";
 
     while (
             !areCloseEnough(parabolicLimits.x1, parabolicLimits.x2, eps)
             && !areCloseEnough(parabolicLimits.x2, parabolicLimits.x3, eps)
             && (!areCloseEnough(parabolicLimits.x1, x1, eps) || !areCloseEnough(parabolicLimits.x3, x3, eps))
             && (parabolicLimits.x1 >= x1)
-            && (parabolicLimits.x3 <= x3)) {
+            && (parabolicLimits.x3 <= x3))
+	{
         x1 = parabolicLimits.x1;
         x3 = parabolicLimits.x3;
         parabolicLimits = getNewParabolicLimits(parabolicLimits);
 
-        foutParabolic << ++iteration << ";\t" << parabolicLimits.x1 << ";\t" << parabolicLimits.x3 << ";\t" << functionCallsNumberParabolic
+        foutParabolic << ++iteration << "\t" << parabolicLimits.x1 << "\t" << parabolicLimits.x3 << "\t" << functionCallsNumberParabolic
                       << "\n";
     }
 

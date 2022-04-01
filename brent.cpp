@@ -40,6 +40,7 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 {
 	foutBrent.open(file);
 	foutBrent.clear();
+	foutBrent << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
 
 	double microEps = 1e-12;
 	double aX = limits.a;

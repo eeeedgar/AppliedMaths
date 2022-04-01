@@ -26,6 +26,7 @@ GoldenRatioLimits goldenRatioGetNewLimits(GoldenRatioLimits limits) {
 double goldenRatioGetMinimum(Limits limits, double eps, std::string file) {
     foutGoldenRatio.open(file);
     foutGoldenRatio.clear();
+	foutGoldenRatio << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
 
     double x1 = limits.b - (limits.b - limits.a) / goldenRatio();
     double x2 = limits.a + (limits.b - limits.a) / goldenRatio();
@@ -33,7 +34,7 @@ double goldenRatioGetMinimum(Limits limits, double eps, std::string file) {
     int iteration = 0;
     while ((goldenRatioLimits.b - goldenRatioLimits.a) / 2 >= eps) {
         goldenRatioLimits = goldenRatioGetNewLimits(goldenRatioLimits);
-        foutGoldenRatio << ++iteration << ";\t" << goldenRatioLimits.a << ";\t" << goldenRatioLimits.b << ";\t"
+        foutGoldenRatio << ++iteration << "\t" << goldenRatioLimits.a << "\t" << goldenRatioLimits.b << "\t"
                         << functionCallsNumberGoldenRatio << "\n";
     }
 

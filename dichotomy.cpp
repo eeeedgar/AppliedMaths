@@ -28,13 +28,14 @@ bool isEnough(Limits limits) {
 double dichotomyGetMinimum(Limits limits, double eps, std::string file) {
     foutDichotomy.open(file);
     foutDichotomy.clear();
+	foutDichotomy << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
 
     int iteration = 0;
 
     while (!isEnough(limits)) {
         limits = dichotomyGetNewLimits(limits, eps);
 
-        foutDichotomy << ++iteration << ";\t" << limits.a << ";\t" << limits.b << ";\t" << functionCallsNumberDichotomy
+        foutDichotomy << ++iteration << "\t" << limits.a << "\t" << limits.b << "\t" << functionCallsNumberDichotomy
                       << "\n";
     }
 
