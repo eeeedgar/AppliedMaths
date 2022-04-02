@@ -16,6 +16,11 @@ ParabolicLimits getParabolicLimitsFunctionValues(ParabolicLimits parabolicLimits
     return parabolicLimits;
 }
 
+double getParabollicMin(double x1, double x2, double x3, double f1, double f2, double f3) {
+    return x2 - ((x2 - x1) * (x2 - x1) * (f2 - f3) - (x2 - x3) * (x2 - x3) * (f2 - f1)) /
+         ((x2 - x1) * (f2 - f3) - (x2 - x3) * (f2 - f1)) / 2;
+}
+
 ParabolicLimits getNewParabolicLimits(ParabolicLimits parabolicLimits) {
     double x1 = parabolicLimits.x1;
     double x2 = parabolicLimits.x2;
@@ -25,18 +30,30 @@ ParabolicLimits getNewParabolicLimits(ParabolicLimits parabolicLimits) {
     double f2 = parabolicLimits.f2;
     double f3 = parabolicLimits.f3;
 
-    double x_ = x2 - ((x2 - x1) * (x2 - x1) * (f2 - f3) - (x2 - x3) * (x2 - x3) * (f2 - f1)) /
-                     ((x2 - x1) * (f2 - f3) - (x2 - x3) * (f2 - f1)) / 2;
+    double x_ = getParabollicMin(x1, x2, x3, f1, f2, f3);
+    double f_ = f(x_);
+    functionCallsNumberParabolic++;
 
     if (x_ < x2) {
-        parabolicLimits.x1 = x_;
-        parabolicLimits.f1 = f(x_);
-        functionCallsNumberParabolic++;
+        if (f_ < f2) {
+            parabolicLimits.x3 = x2;
+            parabolicLimits.f3 = f3;
+        } else {
+            parabolicLimits.x1 = x_;
+            parabolicLimits.f1 = f_;
+        }
+
     } else {
-        parabolicLimits.x3 = x_;
-        parabolicLimits.f3 = f(x_);
-        functionCallsNumberParabolic++;
+        if (f_ < f2) {
+            parabolicLimits.x1 = x2;
+            parabolicLimits.f1 = f2;
+        } else {
+            parabolicLimits.x3 = x_;
+            parabolicLimits.f3 = f_;
+        }
     }
+    parabolicLimits.x2 = (parabolicLimits.x1 + parabolicLimits.x3) / 2;
+    parabolicLimits.f2 = f(parabolicLimits.x2);
 
     return parabolicLimits;
 }
@@ -66,12 +83,7 @@ double parabolicGetMinimum(Limits limits, double eps, std::string file) {
 	foutParabolic << ++iteration << "\t" << parabolicLimits.x1 << "\t" << parabolicLimits.x3 << "\t" << functionCallsNumberParabolic
 				  << "\n";
 
-    while (
-            !areCloseEnough(parabolicLimits.x1, parabolicLimits.x2, eps)
-            && !areCloseEnough(parabolicLimits.x2, parabolicLimits.x3, eps)
-            && (!areCloseEnough(parabolicLimits.x1, x1, eps) || !areCloseEnough(parabolicLimits.x3, x3, eps))
-            && (parabolicLimits.x1 >= x1)
-            && (parabolicLimits.x3 <= x3))
+    while (!areCloseEnough(x1, x3, eps))
 	{
         x1 = parabolicLimits.x1;
         x3 = parabolicLimits.x3;
