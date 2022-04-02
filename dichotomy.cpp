@@ -2,7 +2,7 @@
 #include "dichotomy.h"
 
 std::ofstream foutDichotomy;
-int functionCallsNumberDichotomy = 0;
+int functionCallsNumberDichotomy;
 
 
 Limits dichotomyGetNewLimits(Limits limits, double eps) {
@@ -26,6 +26,7 @@ bool isEnough(Limits limits, double eps) {
 }
 
 double dichotomyGetMinimum(Limits limits, double eps, std::string file) {
+	functionCallsNumberDichotomy = 0;
     foutDichotomy.open(file);
     foutDichotomy.clear();
 	foutDichotomy << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
