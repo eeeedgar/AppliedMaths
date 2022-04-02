@@ -2,7 +2,7 @@
 #include "goldenRatio.h"
 
 std::ofstream foutGoldenRatio;
-int functionCallsNumberGoldenRatio = 0;
+int functionCallsNumberGoldenRatio;
 
 double goldenRatio() {
     return (1 + sqrt(5)) / 2;
@@ -24,6 +24,7 @@ GoldenRatioLimits goldenRatioGetNewLimits(GoldenRatioLimits limits) {
 }
 
 double goldenRatioGetMinimum(Limits limits, double eps, std::string file) {
+	functionCallsNumberGoldenRatio = 0;
     foutGoldenRatio.open(file);
     foutGoldenRatio.clear();
 	foutGoldenRatio << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
