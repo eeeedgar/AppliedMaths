@@ -2,7 +2,7 @@
 #include <fstream>
 #include "fibonacci.h"
 
-int functionCallsNumberFibonacci = 0;
+int functionCallsNumberFibonacci;
 std::ofstream foutFibonacci;
 
 int getFibonacciSequenceElementNumberByValue(int value, std::vector<int> &fibonacciSequence) {
@@ -48,7 +48,7 @@ FibonacciLimits fibonacciGetNewLimits(FibonacciLimits limits) {
 }
 
 double fibonacciGetMinimum(Limits limits, double eps, std::string file) {
-
+	functionCallsNumberFibonacci = 0;
     foutFibonacci.open(file);
     foutFibonacci.clear();
 	foutFibonacci << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
@@ -66,7 +66,7 @@ double fibonacciGetMinimum(Limits limits, double eps, std::string file) {
 
     auto fibonacciLimits = FibonacciLimits{limits.a, limits.b, x1, x2, y1, y2};
 
-    for (int i = n; i > 1; i--) {
+    for (int i = n; i >= 1; i--) {
         fibonacciLimits = fibonacciGetNewLimits(fibonacciLimits);
         foutFibonacci << ++iteration << "\t" << fibonacciLimits.a << "\t" << fibonacciLimits.b << "\t" << functionCallsNumberFibonacci
                      << "\n";
