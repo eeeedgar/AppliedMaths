@@ -3,7 +3,7 @@
 #include <fstream>
 
 std::ofstream foutBrent;
-int functionCallNumberBrent = 0;
+int functionCallNumberBrent;
 
 double r()
 {
@@ -38,6 +38,7 @@ double getParabolaMinX(
 
 double brentGetMinimum(Limits limits, double eps, std::string file)
 {
+	functionCallNumberBrent = 0;
 	foutBrent.open(file);
 	foutBrent.clear();
 	foutBrent << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
