@@ -2,7 +2,7 @@
 #include "parabolic.h"
 
 std::ofstream foutParabolic;
-int functionCallsNumberParabolic = 0;
+int functionCallsNumberParabolic;
 
 
 ParabolicLimits getParabolicLimitsFunctionValues(ParabolicLimits parabolicLimits) {
@@ -63,6 +63,7 @@ bool areCloseEnough(double a, double b, double eps) {
 }
 
 double parabolicGetMinimum(Limits limits, double eps, std::string file) {
+	functionCallsNumberParabolic = 0;
     foutParabolic.open(file);
     foutParabolic.clear();
 	foutParabolic << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
