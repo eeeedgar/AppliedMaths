@@ -3,8 +3,6 @@
 
 #include <cmath>
 
-const double epsilon = 0.01;
-
 struct Limits {
     double a;
     double b;

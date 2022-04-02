@@ -21,8 +21,8 @@ Limits dichotomyGetNewLimits(Limits limits, double eps) {
     return Limits{x1, x2};
 }
 
-bool isEnough(Limits limits) {
-    return std::abs(limits.a - limits.b) < epsilon;
+bool isEnough(Limits limits, double eps) {
+    return std::abs(limits.a - limits.b) < eps;
 }
 
 double dichotomyGetMinimum(Limits limits, double eps, std::string file) {
@@ -32,7 +32,7 @@ double dichotomyGetMinimum(Limits limits, double eps, std::string file) {
 
     int iteration = 0;
 
-    while (!isEnough(limits)) {
+    while (!isEnough(limits, eps)) {
         limits = dichotomyGetNewLimits(limits, eps);
 
         foutDichotomy << ++iteration << "\t" << limits.a << "\t" << limits.b << "\t" << functionCallsNumberDichotomy
