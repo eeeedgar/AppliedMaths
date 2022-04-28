@@ -1,18 +1,15 @@
-#include <fstream>
+#include <iostream>
 #include "dichotomy.h"
+#include "general.h"
 
-std::ofstream foutDichotomy;
-int functionCallsNumberDichotomy;
-
-
-Limits dichotomyGetNewLimits(Limits limits, double eps) {
+Limits dichotomyMethod::dichotomyGetNewLimits(Limits limits, double eps) {
     double c = (limits.a + limits.b) / 2;
     double x1 = c - eps / 3;
     double x2 = c + eps / 3;
-    double f1 = f(x1);
-    functionCallsNumberDichotomy++;
-    double f2 = f(x2);
-    functionCallsNumberDichotomy++;
+    double f1 = func(x1);
+    functionCallsNumber++;
+    double f2 = func(x2);
+    functionCallsNumber++;
 
     if (f1 > f2)
         return Limits{x1, limits.b};
@@ -21,25 +18,26 @@ Limits dichotomyGetNewLimits(Limits limits, double eps) {
     return Limits{x1, x2};
 }
 
-bool isEnough(Limits limits, double eps) {
-    return std::abs(limits.a - limits.b) < eps;
+dichotomyMethod::dichotomyMethod(double (*func)(double), const logger& log)
+: func(func), log(log) {
+    functionCallsNumber = 0;
 }
 
-double dichotomyGetMinimum(Limits limits, double eps, std::string file) {
-	functionCallsNumberDichotomy = 0;
-    foutDichotomy.open(file);
-    foutDichotomy.clear();
-	foutDichotomy << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
+double dichotomyMethod::findMinimum(double a, double b, double eps) {
+    log.log("Итерация\ta\tb\tВызовов функции\n");
 
     int iteration = 0;
+    Limits limits = {a, b};
 
     while (!isEnough(limits, eps)) {
         limits = dichotomyGetNewLimits(limits, eps);
-
-        foutDichotomy << ++iteration << "\t" << limits.a << "\t" << limits.b << "\t" << functionCallsNumberDichotomy
-                      << "\n";
+        log.log(limits, ++iteration, functionCallsNumber);
     }
 
-    foutDichotomy.close();
     return limits.a;
 }
+
+void dichotomyMethod::reset() {
+    functionCallsNumber = 0;
+}
+

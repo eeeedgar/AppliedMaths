@@ -16,4 +16,18 @@ int fibonacciGetIterationNumberAndFillFibonacciSequence(Limits, double, const st
 
 double fibonacciGetMinimum(Limits, double, std::string);
 
+class fibonacciMethod {
+private:
+    int functionCallsNumber;
+    logger log;
+    double (*func)(double);
+    int fibonacciGetIterationNumberAndFillFibonacciSequence(Limits, double, std::vector<int> &);
+    FibonacciLimits fibonacciGetNewLimits(FibonacciLimits);
+    int getFibonacciSequenceElementNumberByValue(int, std::vector<int> &);
+public:
+    fibonacciMethod(double (*func)(double), const logger& log);
+    double findMinimum(double a, double b, double eps);
+    void reset();
+};
+
 #endif //APPLIEDMATHS_LAB1__FIBONACCI_H_

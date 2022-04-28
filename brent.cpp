@@ -1,54 +1,16 @@
 #include "brent.h"
-#include <cmath>
-#include <fstream>
 
-std::ofstream foutBrent;
-int functionCallNumberBrent = 0;
-
-double r()
-{
-	return (3 - sqrt(5)) / 2;
-}
-
-double sign(double x)
-{
-	if (x >= 0)
-		return 1;
-	return -1;
-}
-
-bool isEpsEqual(double a_x, double b_x, double c_x, double microEps)
-{
-	return std::abs(a_x - b_x) < microEps and std::abs(b_x - c_x) < microEps;
-}
-
-double getParabolaMinX(
-	double p1_x, double p1_y,
-	double p2_x, double p2_y,
-	double p3_x, double p3_y)
-{
-	double denominator = 2 * (
-		(p2_x - p1_x) * (p2_y - p3_y) -
-			(p2_x - p3_x) * (p2_y - p1_y));
-	if (denominator == 0)
-		return 0;
-	return p2_x - ((p2_x - p1_x) * (p2_x - p1_x) * (p2_y - p3_y) -
-		(p2_x - p3_x) * (p2_x - p3_x) * (p2_y - p1_y) / denominator);
-}
-
-double brentGetMinimum(Limits limits, double eps, std::string file)
-{
-	foutBrent.open(file);
-	foutBrent.clear();
-	foutBrent << "Итерация" << "\t" << "a" << "\t" << "b" << "\t" << "Вызовов функции" << "\n";
+double brentMethod::findMinimum(double a, double b, double eps) {
+    log.log("Итерация\ta\tb\tВызовов функции\n");
 
 	double microEps = 1e-12;
+	Limits limits = {a, b};
 	double aX = limits.a;
-	double aY = f(aX);
+	double aY = func(aX);
 	double cX = limits.b;
-	double cY = f(cX);
-	double xX = aX + r() * (cX - aX);
-	double xY = f(xX);
+	double cY = func(cX);
+	double xX = aX + goldenRatio() * (cX - aX);
+	double xY = func(xX);
 
 	double wX = xX;
 	double wY = xY;
@@ -57,7 +19,7 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 	double d = cX - aX;
 	double e = d;
 
-	int iterationNumber = 0;
+	int iteration = 0;
 
 	while (std::abs(cX - aX) > eps)
 	{
@@ -73,13 +35,13 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 		double uX = 0;
 		double uY = 0;
 
-		if (not isEpsEqual(xX, wX, vX, microEps))
+		if (!isEnough(xX, wX, vX, microEps))
 		{
 			double parabolaMinX = getParabolaMinX(xX, xY, wX, wY, vX, vY);
-			functionCallNumberBrent += 3;
+			functionCallsNumber += 3;
 
 			uX = parabolaMinX;
-			uY = f(parabolaMinX);
+			uY = func(parabolaMinX);
 
 			if (aX <= uX <= cX and std::abs(uX - xX) < g / 2)
 			{
@@ -87,7 +49,7 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 				if (uX - aX < 2 * tol or cX - uX < 2 * tol)
 				{
 					uX = xX - sign(xX - (aX + cX) / 2) * tol;
-					uY = f(uX);
+					uY = func(uX);
 				}
 			}
 		}
@@ -96,17 +58,17 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 		{
 			if (xX < (aX + cX) / 2)
 			{
-				double goldenRatio = xX + r() * (cX - xX);
-				uX = goldenRatio;
-				uY = f(goldenRatio);
+				double g = xX + goldenRatio() * (cX - xX);
+				uX = g;
+				uY = func(g);
 				e = cX - xX;
 			}
 			else
 			{
-				double goldenRatio = xX - r() * (xX - aX);
-				uX = goldenRatio;
-				uY = f(goldenRatio);
-				e - xX - aX;
+				double g = xX - goldenRatio() * (xX - aX);
+				uX = g;
+				uY = func(g);
+				e = xX - aX;
 			}
 		}
 
@@ -114,13 +76,13 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 		{
 			double minProximity = xX + sign(uX - xX) * eps;
 			uX = minProximity;
-			uY = f(minProximity);
+			uY = func(minProximity);
 		}
 
 		d = std::abs(uX - xX);
 
-		functionCallNumberBrent++;
-		if (parabolic) functionCallNumberBrent++;
+		functionCallsNumber++;
+		if (parabolic) functionCallsNumber++;
 
 		if (uY <= xY)
 		{
@@ -154,7 +116,7 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 				aY = uY;
 			}
 
-			if (parabolic) functionCallNumberBrent++;
+			if (parabolic) functionCallsNumber++;
 
 			if (uY <= wY or std::abs(wX - xX) < microEps)
 			{
@@ -163,7 +125,7 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 			}
 			else
 			{
-				if (parabolic) functionCallNumberBrent++;
+				if (parabolic) functionCallsNumber++;
 				if (uY <= vY or std::abs(vX - xX) < microEps or std::abs(vX - wX) < microEps)
 				{
 					vX = uX;
@@ -171,10 +133,41 @@ double brentGetMinimum(Limits limits, double eps, std::string file)
 				}
 			}
 		}
-
-		foutBrent << ++iterationNumber << "\t" << aX << "\t" << cX << "\t" << functionCallNumberBrent << "\n";
+        log.log({aX, cX}, ++iteration, functionCallsNumber);
 	}
 
-	foutBrent.close();
 	return xX;
 }
+
+double brentMethod::goldenRatio() {
+    return (3 - sqrt(5)) / 2;
+}
+
+bool brentMethod::isEnough(double a_x, double b_x, double c_x, double microEps) {
+    return std::abs(a_x - b_x) < microEps and std::abs(b_x - c_x) < microEps;
+}
+
+double brentMethod::sign(double x) {
+    if (x >= 0)
+        return 1;
+	return -1;
+}
+
+double brentMethod::getParabolaMinX(double p1_x, double p1_y, double p2_x, double p2_y, double p3_x, double p3_y) {
+    double denominator = 2 * (
+            (p2_x - p1_x) * (p2_y - p3_y) -
+            (p2_x - p3_x) * (p2_y - p1_y));
+    if (denominator == 0)
+        return 0;
+    return p2_x - ((p2_x - p1_x) * (p2_x - p1_x) * (p2_y - p3_y) -
+                   (p2_x - p3_x) * (p2_x - p3_x) * (p2_y - p1_y) / denominator);
+}
+
+brentMethod::brentMethod(double (*func)(double), const logger &log) : func(func), log(log) {
+    functionCallsNumber = 0;
+}
+
+void brentMethod::reset() {
+    functionCallsNumber = 0;
+}
+
