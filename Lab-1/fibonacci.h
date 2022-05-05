@@ -21,12 +21,12 @@ private:
     int functionCallsNumber;
     logger log;
     double (*func)(double);
-    int fibonacciGetIterationNumberAndFillFibonacciSequence(Limits, double, std::vector<int> &);
     FibonacciLimits fibonacciGetNewLimits(FibonacciLimits);
-    int getFibonacciSequenceElementNumberByValue(int, std::vector<int> &);
 public:
     fibonacciMethod(double (*func)(double), const logger& log);
     double findMinimum(double a, double b, double eps);
+    static int getFibonacciSequenceElementNumberByValue(int, std::vector<int> &);
+    static int fibonacciGetIterationNumberAndFillFibonacciSequence(Limits, double, std::vector<int> &);
     void reset();
 };
 
