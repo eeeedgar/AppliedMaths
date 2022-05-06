@@ -16,13 +16,18 @@ vector gradient_descend::execute(vector start_point) {
     log.log(step.name());
     log.log("(" + std::to_string(start_point.x) + "; " + std::to_string(start_point.y) + ")");
     log.log("iteration\tx(k)\ty(k)\tx(k + 1)\ty(k + 1)\tstep");
-    while (distance(curr, prev) >= eps) {
+    vector grad = function.derivative(start_point);
+    double z_curr = function.value(curr);
+    double z_prev = z_curr - 2 * eps;
+    while (distance(curr, prev) >= eps && grad.len() >= eps && std::abs(z_curr - z_prev) >= eps) {
         prev = curr;
-        vector grad = function.derivative(prev);
-        log.log("(" + std::to_string(grad.x) + "; " + std::to_string(grad.y) + ")");
+        grad = function.derivative(prev);
+        // log.log("(" + std::to_string(grad.x) + "; " + std::to_string(grad.y) + ")");
         double s = step.get_value_and_update(prev);
         curr = {prev.x - s * grad.x, prev.y - s * grad.y};
         log.log(std::to_string(++iteration) + "\t" + std::to_string(prev.x) + "\t" + std::to_string(prev.y) + "\t" + std::to_string(curr.x)+ "\t" + std::to_string(curr.y) + "\t" + std::to_string(s));
+        z_prev = z_curr;
+        z_curr = function.value(curr);
         if (iteration > 1000) {
             log.log("Does not converge");
             return curr;

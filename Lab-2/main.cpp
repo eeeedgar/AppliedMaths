@@ -6,11 +6,12 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "conjugate_gradients_method.h"
 
 const std::string output_directory = "../outputs";
 
 // param for all kinds of steps
-double eps = 0.01;
+double eps = 1e-3;
 // recommended params for fractional step
 double delta = 0.95;
 double start_step = 1;
@@ -20,7 +21,7 @@ double left = 0;
 double right = 1;
 
 std::vector<quadratic_function> test_functions = {
-        quadratic_function(0.1, 0, 0.1, 0, 0, 0),
+        quadratic_function(1, 0, 1, 0, 0, 0),
         quadratic_function(10, 0, 1, 0, 0, 0),
         quadratic_function(1, 1, -6, 0, 0, 0),
 };
@@ -98,9 +99,25 @@ void get_fibonacci_step_data() {
     }
 }
 
+void get_conjugate_gradients_data() {
+    std::string output = output_directory + "/conjugate_gradients/";
+    int num = 0;
+    for (int i = 0; i < test_functions.size(); i++) {
+        for (int k = 0; k < starting_points[i].size(); k++) {
+            std::ofstream out;
+            out.open(output + "(function" + std::to_string(i + 1) + ")" + std::to_string(++num) + ".txt");
+            logger log = logger(out);
+            conjugate_gradients_method method = conjugate_gradients_method(test_functions[i], log, eps);
+            method.execute(starting_points[i][k]);
+            out.close();
+        }
+    }
+}
+
 int main() {
     get_constant_step_data();
     get_fractional_step_data();
     get_golden_ratio_step_data();
     get_fibonacci_step_data();
+    get_conjugate_gradients_data();
 }
