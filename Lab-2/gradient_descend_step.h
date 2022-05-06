@@ -53,4 +53,13 @@ public:
     double get_value_and_update(vector x0) override;
     std::string name() override;
 };
+
+class linear_step : public gradient_descend_step {
+private:
+    double left_bound, right_bound;
+public:
+    linear_step(double left_bound, double right_bound, double eps, vector x0, quadratic_function& func);
+    double get_value_and_update(vector x0) override;
+    std::string name() override;
+};
 #endif //LAB_2_GRADIENT_DESCEND_STEP_H

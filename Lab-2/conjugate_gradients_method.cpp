@@ -12,7 +12,8 @@ conjugate_gradients_method::conjugate_gradients_method(quadratic_function &func,
 vector conjugate_gradients_method::execute(vector point) {
     int iteration  = 0;
     log.log(function.to_string());
-    log.log("(" + std::to_string(point.x) + "; " + std::to_string(point.y) + ")");
+    log.log("Conjugate gradients");
+    log.log(std::to_string(point.x) + ";" + std::to_string(point.y));
     log.log("iteration\tx(k)\ty(k)\tx(k + 1)\ty(k + 1)\tstep");
     vector p_prev;
     vector p_curr;
@@ -24,9 +25,7 @@ vector conjugate_gradients_method::execute(vector point) {
     vector prev = curr;
     curr = {curr.x - a * grad_curr.x, curr.y - a * grad_curr.y};
     log.log(std::to_string(++iteration) + "\t" + std::to_string(prev.x) + "\t" + std::to_string(prev.y) + "\t" + std::to_string(curr.x)+ "\t" + std::to_string(curr.y) + "\t" + std::to_string(a));
-    double z_curr = function.value(curr);
-    double z_prev = function.value(prev);
-    while (distance(prev, curr) >= eps && grad_curr.len() >= eps && std::abs(z_curr - z_prev) >= eps) {
+    while (distance(prev, curr) >= eps && grad_curr.len() >= eps) {
         grad_prev = grad_curr;
         grad_curr = function.derivative(curr);
         double bk = iteration % 3 == 0 ? 0 :grad_curr.len() /  grad_prev.len();
@@ -36,8 +35,10 @@ vector conjugate_gradients_method::execute(vector point) {
         prev = curr;
         curr = {curr.x - a * grad_curr.x, curr.y - a * grad_curr.y};
         log.log(std::to_string(++iteration) + "\t" + std::to_string(prev.x) + "\t" + std::to_string(prev.y) + "\t" + std::to_string(curr.x)+ "\t" + std::to_string(curr.y) + "\t" + std::to_string(a));
-        z_prev = z_curr;
-        z_curr = function.value(curr);
+        if (iteration > 1000 || curr.x < -1e3 || curr.y < -1e3) {
+            log.log("Does not converge");
+            return curr;
+        }
     }
     log.log("ans = (" + std::to_string(curr.x) + "; " + std::to_string(curr.y) + ")");
     return curr;

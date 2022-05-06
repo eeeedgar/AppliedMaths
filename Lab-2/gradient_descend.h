@@ -15,7 +15,6 @@ private:
 public:
     gradient_descend(quadratic_function& func, gradient_descend_step& step, logger& log, double eps);
     vector execute(vector start_point);
-    vector make_iteration();
 };
 
 

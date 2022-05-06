@@ -19,6 +19,9 @@ double gradient_descend_iterations_counter::execute(double step) {
         vector grad = function.derivative(prev);
         curr = {prev.x - step * grad.x, prev.y - step * grad.y};
         ++iteration;
+        if (iteration > 1000) {
+            return INT16_MAX;
+        }
     }
 
     return iteration;

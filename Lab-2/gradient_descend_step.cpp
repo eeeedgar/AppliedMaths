@@ -35,7 +35,7 @@ fractional_step::fractional_step(double value, double delta, double eps, quadrat
 
 double fractional_step::get_value_and_update(vector x0) {
     double val = value;
-    while (!predicate(x0, val, eps)) {
+    while (!predicate(x0, val, 0.1)) {
         val *= delta;
     }
     return val;
@@ -127,4 +127,25 @@ double fibonacci_step::get_value_and_update(vector x0) {
 
 std::string fibonacci_step::name() {
     return "Fibonacci step";
+}
+
+double linear_step::get_value_and_update(vector x0) {
+    return gradient_descend_step::get_value_and_update(x0);
+}
+
+linear_step::linear_step(double left_bound, double right_bound, double eps, vector x0, quadratic_function &func)
+: gradient_descend_step(0, eps, func), left_bound(left_bound), right_bound(right_bound){
+    gradient_descend_iterations_counter counter = gradient_descend_iterations_counter(func, eps, x0);
+    int prev_min = INT16_MAX;
+    for (double a = left_bound + eps; a < right_bound; a += eps) {
+        int iter = counter.execute(a);
+        if (iter < prev_min) {
+            prev_min = iter;
+            value = a;
+        }
+    }
+}
+
+std::string linear_step::name() {
+    return "Linear search found step";
 }
