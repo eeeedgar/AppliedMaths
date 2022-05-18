@@ -27,7 +27,7 @@ class sle_solve_test(unittest.TestCase):
         for i in range(1000):
             rnd.seed()
             size = rnd.randint(3, 10)
-            s = mg.generate_system(size)
+            s = mg.generate_system(size, mg.generate_sparse_matrix(size))
             generated_matrix = np.array(s[0])
             b = np.array(s[1])
             system = sle.sle(generated_matrix, np.array([b]))
@@ -39,7 +39,7 @@ class sle_solve_test(unittest.TestCase):
         for i in range(1000):
             rnd.seed()
             size = rnd.randint(3, 3)
-            s = mg.generate_system(size)
+            s = mg.generate_system(size, mg.generate_sparse_matrix(size))
             generated_matrix = np.array(s[0])
             b = np.array(s[1])
             system = sle.sle(generated_matrix, np.array([b]))

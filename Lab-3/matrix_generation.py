@@ -47,20 +47,17 @@ def generate_triangle_reversible_matrix(size, upper):
 
 def generate_sparse_matrix(size):
     result = np.zeros([size, size])
-    while has_zero_minors(result, size):
-        result = np.zeros([size, size])
-        for i in range(size):
-            for j in range(size):
-                if i == j:
-                    while result[i][j] == 0.:
-                        result[i][j] = rnd.randint(-10, 10)
-                elif rnd.random() < 0.3:
+    for i in range(size):
+        for j in range(size):
+            if i == j:
+                while result[i][j] == 0:
                     result[i][j] = rnd.randint(-10, 10)
+            elif rnd.random() < 0.3:
+                result[i][j] = rnd.randint(-10, 10)
     return result
 
 
-def generate_system(size):
-    a = generate_sparse_matrix(size)
+def generate_system(size, a):
     x = np.array([rnd.randint(-10, 10) for i in range(size)])
     b = np.array([0] * size)
     for i in range(size):
@@ -74,8 +71,17 @@ def generate_sequence(size, k):
     for i in range(size):
         s = 0
         for j in range(size):
-            if i != j:
-                s += abs(generated[i][j])
+            s += abs(generated[i][j])
         if k != 0:
-            generated[i][i] = s * k
+            generated[i][i] = s + 10 ** k
+        else:
+            generated[i][i] = s
     return generated
+
+
+def generate_gilbert_matrix(size):
+    matrix = np.ones([size, size])
+    for i in range(size):
+        for j in range(size):
+            matrix[i][j] /= (i + j + 1)
+    return matrix
