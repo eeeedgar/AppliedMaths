@@ -28,7 +28,7 @@ vector conjugate_gradients_method::execute(vector point) {
     while (distance(prev, curr) >= eps && grad_curr.len() >= eps) {
         grad_prev = grad_curr;
         grad_curr = function.derivative(curr);
-        double bk = iteration % 3 == 0 ? 0 :grad_curr.len() /  grad_prev.len();
+        double bk = iteration % 3 == 0 ? 0 : grad_curr.len() /  grad_prev.len();
         p_prev = p_curr;
         p_curr = {grad_curr.x + bk * p_prev.x, grad_curr.y + bk * p_prev.y};
         a = minimize(curr, p_curr);
