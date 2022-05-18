@@ -1,7 +1,6 @@
 import unittest
 import random as rnd
 import numpy as np
-import main as m
 import matrix_generation as mg
 import matrix as matr
 

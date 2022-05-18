@@ -2,13 +2,44 @@ import matrix as csr
 import numpy as np
 
 
-class sle:
+def count_difference(x, y):
+    res = 0
+    for i in range(len(x)):
+        temp = abs(x[i] - y[i])
+        if temp > res:
+            res = temp
+    return res
 
+
+def vector_norm(x):
+    result = 0
+    for i in range(len(x)):
+        result += abs(x[i])
+    return result
+
+
+def matrix_norm(a):
+    res = 0
+    for i in range(a.shape[0]):
+        n = vector_norm(a[i])
+        if n > res:
+            res = n
+    return res
+
+
+class sle:
     def __init__(self, matrix_a, values):
         self.a_csr = csr.csr_matrix(matrix_a)
         self.values = values
+        self.dimension = self.a_csr.n
+        self.b_norm = matrix_norm(self.b_matrix())
 
-    def solve(self):
+    def b_matrix(self):
+        d = np.diag([self.a_csr.get(i, i) for i in range(self.dimension)])
+        e = np.diag(np.ones([self.dimension]))
+        return e - np.matmul(np.linalg.inv(d), self.a_csr.get_matrix())
+
+    def solve_gauss(self):
         lu = self.a_csr.lu_decomposition()
         y = self.solve_gauss_down(lu[0], self.values)
         x = self.solve_gauss_upper(lu[1], y)
@@ -31,3 +62,42 @@ class sle:
                 s += a.get(i, j) * x[j]
             x[i] = (b[0, i] - s) / a.get(i, i)
         return np.array([x])
+
+    def solve_jacobi(self, eps):
+        x_curr = [0] * self.dimension
+        x_prev = [0] * self.dimension
+        for i in range(self.dimension):
+            x_curr[i] = self.values[0, i] / self.a_csr.get(i, i)
+        difference = 2 * eps
+        iterations = 0
+
+        while difference >= eps:
+            x_prev = np.copy(x_curr)
+            for i in range(self.dimension):
+                x_curr[i] = self.values[0, i]
+                for j in range(self.dimension):
+                    if j != i:
+                        x_curr[i] = x_curr[i] - self.a_csr.get(i, j) * x_prev[j]
+
+                x_curr[i] /= self.a_csr.get(i, i)
+
+            for i in range(self.dimension):
+                if abs(x_curr[i]) > 1e10:
+                    return system_solution(x_curr, x_prev, iterations, False, self.b_norm)
+            if iterations > 1000:
+                return system_solution(x_curr, x_prev, iterations, False, self.b_norm)
+            difference = count_difference(x_curr, x_prev)
+            iterations += 1
+        return system_solution(x_curr, x_prev, iterations, True, self.b_norm)
+
+
+class system_solution:
+    def __init__(self, x, x_prev, iterations, convergence, b_norm):
+        self.x = x
+        self.x_prev = x_prev
+        self.iterations = iterations
+        self.convergence = convergence
+        self.b_norm = b_norm
+
+    def error(self):
+        return (self.b_norm / (1 - self.b_norm)) * vector_norm(np.array(self.x) - np.array(self.x_prev))

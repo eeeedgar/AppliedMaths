@@ -15,7 +15,11 @@ def generate_upper_triangle_matrix(size):
     result = np.zeros([size, size])
     for i in range(size):
         for j in range(i, size):
-            result[i][j] = rnd.randint(-10, 10)
+            if i == j:
+                while result[i][j] == 0:
+                    result[i][j] = rnd.randint(-10, 10)
+            elif rnd.random() < 0.3:
+                result[i][j] = rnd.randint(-10, 10)
     return result
 
 
@@ -23,7 +27,11 @@ def generate_down_triangle_matrix(size):
     result = np.zeros([size, size])
     for i in range(size):
         for j in range(i + 1):
-            result[i][j] = rnd.randint(-10, 10)
+            if i == j:
+                while result[i][j] == 0:
+                    result[i][j] = rnd.randint(-10, 10)
+            elif rnd.random() < 0.3:
+                result[i][j] = rnd.randint(-10, 10)
     return result
 
 
@@ -44,7 +52,8 @@ def generate_sparse_matrix(size):
         for i in range(size):
             for j in range(size):
                 if i == j:
-                    result[i][j] = rnd.randint(-10, 10)
+                    while result[i][j] == 0.:
+                        result[i][j] = rnd.randint(-10, 10)
                 elif rnd.random() < 0.3:
                     result[i][j] = rnd.randint(-10, 10)
     return result
@@ -58,3 +67,15 @@ def generate_system(size):
         for j in range(size):
             b[i] += a[i][j] * x[j]
     return a, b, x
+
+
+def generate_sequence(size, k):
+    generated = generate_sparse_matrix(size)
+    for i in range(size):
+        s = 0
+        for j in range(size):
+            if i != j:
+                s += abs(generated[i][j])
+        if k != 0:
+            generated[i][i] = s * k
+    return generated
