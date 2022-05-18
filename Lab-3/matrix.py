@@ -60,7 +60,7 @@ class csr_matrix:
         return result
 
     def lu_decomposition(self):
-        if len(self.l) == 0 or len(self.u) == 0:
+        if self.l == [] or self.u == []:
             l_m = csr_matrix(np.zeros([self.n, self.m]))
             u_m = csr_matrix(np.zeros([self.n, self.m]))
 
@@ -126,3 +126,4 @@ class csr_matrix:
         for i in range(self.n):
             res *= u.get(i, i)
         return res
+

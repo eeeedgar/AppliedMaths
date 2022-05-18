@@ -19,39 +19,6 @@ def equal_with_eps(first, second, eps):
     return True
 
 
-class MyTestCase(unittest.TestCase):
-    def test_lu_decomposition(self):
-        for i in range(1000):
-            rnd.seed()
-            size = rnd.randint(3, 10)
-            generated_matrix = mg.generate_sparse_matrix(size)
-            lu = m.LU_decomposition(generated_matrix)
-            lu_multiplied = np.matmul(lu[0], lu[1])
-            self.assertEqual(equal_with_eps(lu_multiplied, generated_matrix, EPS), True)
-
-    def test_inverse_triangle_matrix(self):
-        for i in range(1000):
-            rnd.seed()
-            size = rnd.randint(3, 10)
-            generated_upper_matrix = mg.generate_triangle_reversible_matrix(size, True)
-            generated_down_matrix = mg.generate_triangle_reversible_matrix(size, False)
-            inversion_upper = m.inverse_upper_matrix(generated_upper_matrix)
-            inversion_down = m.inverse_down_matrix(generated_down_matrix)
-            inversion_upper_np = np.linalg.inv(generated_upper_matrix)
-            inversion_down_np = np.linalg.inv(generated_down_matrix)
-            self.assertEqual(equal_with_eps(inversion_upper, inversion_upper_np, EPS), True)
-            self.assertEqual(equal_with_eps(inversion_down, inversion_down_np, EPS), True)
-
-    def test_inverse_lu_matrix(self):
-        for i in range(1000):
-            rnd.seed()
-            size = rnd.randint(3, 10)
-            generated_matrix = mg.generate_sparse_matrix(size)
-            inverse = m.inverse_matrix(generated_matrix)
-            inverse_with_np = np.linalg.inv(generated_matrix)
-            self.assertEqual(equal_with_eps(inverse, inverse_with_np, EPS), True)
-
-
 class csr_test(unittest.TestCase):
     def test_csr_init(self):
         for i in range(1000):

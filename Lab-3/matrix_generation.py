@@ -15,7 +15,7 @@ def generate_upper_triangle_matrix(size):
     result = np.zeros([size, size])
     for i in range(size):
         for j in range(i, size):
-            result[i][j] = rnd.randint(1, 10)
+            result[i][j] = rnd.randint(-10, 10)
     return result
 
 
@@ -23,7 +23,7 @@ def generate_down_triangle_matrix(size):
     result = np.zeros([size, size])
     for i in range(size):
         for j in range(i + 1):
-            result[i][j] = rnd.randint(1, 10)
+            result[i][j] = rnd.randint(-10, 10)
     return result
 
 
@@ -48,3 +48,13 @@ def generate_sparse_matrix(size):
                 elif rnd.random() < 0.3:
                     result[i][j] = rnd.randint(-10, 10)
     return result
+
+
+def generate_system(size):
+    a = generate_sparse_matrix(size)
+    x = np.array([rnd.randint(-10, 10) for i in range(size)])
+    b = np.array([0] * size)
+    for i in range(size):
+        for j in range(size):
+            b[i] += a[i][j] * x[j]
+    return a, b, x
