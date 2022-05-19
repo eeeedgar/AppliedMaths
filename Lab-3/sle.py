@@ -32,12 +32,20 @@ class sle:
         self.a_csr = csr.csr_matrix(matrix_a)
         self.values = values
         self.dimension = self.a_csr.n
-        self.b_norm = matrix_norm(self.b_matrix())
+        self.b_norm = self.b_norma()
 
-    def b_matrix(self):
-        d = np.diag([self.a_csr.get(i, i) for i in range(self.dimension)])
-        e = np.diag(np.ones([self.dimension]))
-        return e - np.matmul(np.linalg.inv(d), self.a_csr.get_matrix())
+    def b_norma(self):
+        value = 0
+        for i in range(self.dimension):
+            v = self.a_csr.get(i, i)
+            line_norm = 0
+            for j in range(self.dimension):
+                if i != j:
+                    line_norm += abs(self.a_csr.get(i, j) / v)
+            if abs(line_norm) > value:
+                value = abs(line_norm)
+
+        return value
 
     def solve_gauss(self):
         lu = self.a_csr.lu_decomposition()
@@ -81,9 +89,6 @@ class sle:
 
                 x_curr[i] /= self.a_csr.get(i, i)
 
-            for i in range(self.dimension):
-                if abs(x_curr[i]) > 1e10:
-                    return system_solution(x_curr, x_prev, iterations, False, self.b_norm)
             if iterations > 1000:
                 return system_solution(x_curr, x_prev, iterations, False, self.b_norm)
             difference = count_difference(x_curr, x_prev)
