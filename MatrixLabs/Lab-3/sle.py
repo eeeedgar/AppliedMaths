@@ -89,7 +89,7 @@ class sle:
 
                 x_curr[i] /= self.a_csr.get(i, i)
 
-            if iterations > 1000:
+            if iterations > 50:
                 return system_solution(x_curr, x_prev, iterations, False, self.b_norm)
             difference = count_difference(x_curr, x_prev)
             iterations += 1

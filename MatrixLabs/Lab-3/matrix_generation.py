@@ -17,9 +17,9 @@ def generate_upper_triangle_matrix(size):
         for j in range(i, size):
             if i == j:
                 while result[i][j] == 0:
-                    result[i][j] = rnd.randint(-10, 10)
+                    result[i][j] = rnd.randint(-4, 4)
             elif rnd.random() < 0.3:
-                result[i][j] = rnd.randint(-10, 10)
+                result[i][j] = rnd.randint(-4, 4)
     return result
 
 
@@ -29,9 +29,9 @@ def generate_down_triangle_matrix(size):
         for j in range(i + 1):
             if i == j:
                 while result[i][j] == 0:
-                    result[i][j] = rnd.randint(-10, 10)
+                    result[i][j] = rnd.randint(-4, 4)
             elif rnd.random() < 0.3:
-                result[i][j] = rnd.randint(-10, 10)
+                result[i][j] = rnd.randint(-4, 4)
     return result
 
 
@@ -51,9 +51,9 @@ def generate_sparse_matrix(size):
         for j in range(size):
             if i == j:
                 while result[i][j] == 0:
-                    result[i][j] = rnd.randint(-10, 10)
+                    result[i][j] = rnd.randint(-4, 4)
             elif rnd.random() < 0.3:
-                result[i][j] = rnd.randint(-10, 10)
+                result[i][j] = rnd.randint(-4, 4)
     return result
 
 
