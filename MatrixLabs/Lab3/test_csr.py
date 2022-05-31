@@ -103,6 +103,18 @@ class csr_test(unittest.TestCase):
             inverse_with_np = np.linalg.inv(generated_matrix)
             self.assertEqual(equal_with_eps(inverse.get_matrix(), inverse_with_np, EPS), True)
 
+    def test_insert_zero(self):
+        a = np.array(
+            [[1, 2, 3],
+             [1, 2, 3],
+             [1, 2, 3]])
+        csr = matr.csr_matrix(a)
+        for i in range(3):
+            for j in range(3):
+                csr.set(i, j, 0)
+
+        self.assertEqual(equal_with_eps(np.zeros([3, 3]), csr.get_matrix(), EPS), True)
+
 
 if __name__ == '__main__':
     unittest.main()

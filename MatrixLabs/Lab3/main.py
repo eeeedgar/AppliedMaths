@@ -19,7 +19,7 @@ def distance(x, y):
 
 
 def test_gauss_solution():
-    f = open('../output/gauss_diag.txt', 'w')
+    f = open('output/gauss_diag.txt', 'w')
     for size in n1:
         for k in ks:
             a = mg.generate_sequence(size, k)
@@ -33,7 +33,7 @@ def test_gauss_solution():
             print(s)
             f.write(s)
     f.close()
-    f = open('../output/gauss_gilbert.txt', 'w')
+    f = open('output/gauss_gilbert.txt', 'w')
     for size in n1:
         a = mg.generate_gilbert_matrix(size)
         x = np.array([(i + 1) for i in range(size)])
@@ -65,7 +65,7 @@ def test_jacobi_solution():
     #             f.write(s)
     #             print(s)
     # f.close()
-    f = open('../output/jackob_gilbert.txt', 'w')
+    f = open('output/jackob_gilbert.txt', 'w')
     f.write("size iterations convergence b_norm distance time\n")
     for e in eps:
         for size in n:

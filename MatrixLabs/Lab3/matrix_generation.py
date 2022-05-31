@@ -67,7 +67,7 @@ def generate_system(size, a):
 
 
 def generate_sequence(size, k):
-    generated = generate_sparse_matrix(size)
+    generated = generate_symmetric_matrix(size)
     for i in range(size):
         s = 0
         for j in range(size):
@@ -85,3 +85,16 @@ def generate_gilbert_matrix(size):
         for j in range(size):
             matrix[i][j] /= (i + j + 1)
     return matrix
+
+
+def generate_symmetric_matrix(size):
+    result = np.zeros([size, size])
+    for i in range(size):
+        for j in range(i + 1):
+            if i == j:
+                while result[i][j] == 0:
+                    result[i][j] = rnd.randint(-10, 10)
+            elif rnd.random() < 0.3:
+                result[i][j] = rnd.randint(-10, 10)
+                result[j][i] = result[i][j]
+    return result

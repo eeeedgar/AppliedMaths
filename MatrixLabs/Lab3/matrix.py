@@ -30,15 +30,21 @@ class csr_matrix:
         return 0
 
     def set(self, i, j, value):
-        if value == 0:
-            return
         start = self.indptr[i]
         finish = self.indptr[i + 1]
         for k in range(start, finish):
             if self.indices[k - 1] == j:
-                self.data[k - 1] = value
+                if value != 0:
+                    self.data[k - 1] = value
+                else:
+                    del self.data[k - 1]
+                    del self.indices[k - 1]
+                    for j in range(i + 1, self.n + 1):
+                        self.indptr[j] -= 1
                 return
 
+        if value == 0:
+            return
         self.indices.insert(finish - 1, j)
         self.data.insert(finish - 1, value)
 
