@@ -24,7 +24,7 @@ def count_error(a, labd):
 def gilbert_test_eps():
     f = open('output/gilbert1.txt', 'w')
     f.write("eps iterations error\n")
-    size = 20
+    size = 10
     iterations = []
     errors = []
     m = mg.generate_gilbert_matrix(size)
@@ -53,12 +53,11 @@ def gilbert_test_eps():
 
 
 def gilbert_test_size():
-    size = 20
     iterations = []
     errors = []
     f = open('output/gilbert2.txt', 'w')
     f.write("size iterations error\n")
-    e = 1e-15
+    e = 1e-10
     iterations.clear()
     errors.clear()
     for size in n:
@@ -186,13 +185,9 @@ def seq_test_k():
     plt.show()
 
 
+# gilbert_test_eps()
+gilbert_test_size()
 # seq_test_k()
 # seq_test_eps()
 # seq_test_size()
-matrix = np.array(
-    [[2, -1, 0],
-    [-1, 2, -1],
-    [0, -1, 2]]
-)
 
-print(jr.solve(mt.csr_matrix(matrix), 1e-20)[0])
